@@ -5,8 +5,7 @@ using System.Collections.Generic;
 namespace Celeste.Mod.MaxHelpingHand.Module {
     public static class LuckyHelperImports {
         [ModImportName("LuckyHelper")]
-        public static class Interop
-        {
+        public static class Interop {
             public static Func<List<Player>> GetDummyPlayers;
         }
 

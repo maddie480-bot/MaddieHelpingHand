@@ -21,24 +21,17 @@ namespace Celeste.Mod.MaxHelpingHand.Triggers {
         private static void onLevelUpdate(On.Celeste.Level.orig_Update orig, Level self) {
             orig(self);
 
-            List<Player> dummyPlayers = LuckyHelperImports.GetDummyPlayers();
+            Player player = self.Tracker.GetEntity<Player>();
 
-            Player player = null;
-            if (dummyPlayers.Count > 0)
-            {
-                // If one use dummyPlayer and it collides with ColorGradeFadeTrigger mostly means he wants to control the ColorGradeFadeTrigger with dummyPlayer 
-                foreach (Player dummyPlayer in dummyPlayers)
-                {
-                    if (dummyPlayer.CollideCheck<ColorGradeFadeTrigger>())
-                    {
-                        player = dummyPlayer;
-                        break;
-                    }
+            // if a Lucky Helper Dummy Player is inside a trigger, it takes priority over the actual player
+            foreach (Player dummyPlayer in LuckyHelperImports.GetDummyPlayers()) {
+                if (dummyPlayer.CollideCheck<ColorGradeFadeTrigger>()) {
+                    player = dummyPlayer;
+                    break;
                 }
             }
 
             // check if the player is in a color grade fade trigger
-            player ??= self.Tracker.GetEntity<Player>();
             ColorGradeFadeTrigger trigger = self.Tracker.GetEntities<ColorGradeFadeTrigger>().OfType<ColorGradeFadeTrigger>()
                 .FirstOrDefault(t => t.evenDuringReflectionFall ? player?.Collider.Collide(t) ?? false : t.playerInside);
             if (player != null && trigger != null) {
